@@ -76,6 +76,7 @@ Start
 
         if (strcmp(guess, word) == 0){
             success = 1;
+            printf("       %s", guess);
             break;
         }else{
             printf("       ");
@@ -86,10 +87,10 @@ Start
         guesses--;
     }
     if (success == 1){
-        printf("\n--- Congratulations! You got it! ---\n");
+        printf("\n\n--- Congratulations! You got it! ---\n\n");
     }
     else{
-        printf("\n--- Too bad, the word was %s! ---\n", word);
+        printf("\n\n--- Too bad, the word was %s! ---\n\n", word);
     }
 
 /*

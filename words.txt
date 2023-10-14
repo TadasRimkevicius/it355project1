@@ -1,3 +1,7 @@
+ruby
+typo
+dog
+lost
 crow
 card
 phone
@@ -10,10 +14,12 @@ vial
 vile
 marshal
 strip
+cat
 sworn
 score
 grind
 crisp
+storm
 pouch
 quirk
 jolt
