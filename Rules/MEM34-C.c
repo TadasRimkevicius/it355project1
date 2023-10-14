@@ -7,5 +7,7 @@ int main(){
     int x = 1;
     *numberPointer = 2023 + x;
     printf("%d\n", *numberPointer);
+    // only free numberPointer, x is statically allocated
     free(numberPointer);
 }
+
