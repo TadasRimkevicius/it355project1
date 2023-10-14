@@ -13,6 +13,10 @@ char* getGuess();
 // Helper function that checks if the user input is all characters or not
 int validateGuess();
 
+// Check user's guess and returns a string formatted to display
+// which letters are correct or not and letters not in the right place.
+char* checkGuess();
+
 int main(int argc, char *argv[]){
     char buffer[1024];
     char *words[100];
@@ -26,7 +30,6 @@ int main(int argc, char *argv[]){
         exit(-1);
     }
 
-
     // Open files and check for valid pointer
     FILE *fin = fopen(argv[1], "r"); //Read file, file must exist
     if (fin == NULL){
@@ -37,7 +40,13 @@ int main(int argc, char *argv[]){
 
     // Read in words from file and store them in words[] array
     while (fgets(buffer, sizeof(buffer), fin) != NULL){
-        words[wordCount] = buffer; //Put word into word array
+        size_t newlinePos = strcspn(buffer, "\n"); // Find the position of the newline character
+        if (newlinePos < strlen(buffer)) {
+            buffer[newlinePos] = '\0'; // Replace the newline character with a null terminator
+            words[wordCount] = strdup(buffer); // Store the modified word in the words array
+        } else {
+            words[wordCount] = strdup(buffer);
+        }
         if (words[wordCount] == NULL){
             fprintf(stderr, "\n--- Error reading line ---\n\n");
             exit(-1);
@@ -45,12 +54,11 @@ int main(int argc, char *argv[]){
         wordCount++;
     }
 
-
     // Choose a random word from the list as the wordle word
     random = rand() % wordCount;
     char* word = words[random];
     int wordLength = strlen(word);
-    int guesses = 5;
+    int guesses = 6;
 
 /*
 Start
@@ -58,32 +66,40 @@ Start
 
     printf("\t\t-=- W O R D L E -=-\n");
     printf("\t =O=------------=O=------------=O=\n\n");
-    printf("The word has %d letters. You have 5 guesses. Good luck!\n\n", wordLength);
+    printf("The word has %d letters. You have 6 chances. Good luck!\n", wordLength);
+    printf("_ = Letter not in word\n");
+    printf("/ = Letter in word but not in correct spot\n\n");
 
     int success = 0;
     while (guesses != 0){
         char* guess = getGuess(wordLength);
-        printf("%s\n", guess);
 
         if (strcmp(guess, word) == 0){
             success = 1;
             break;
+        }else{
+            printf("       ");
+            printf(checkGuess(guess, word, wordLength));
+            printf("\n\n");
         }
 
         guesses--;
     }
     if (success == 1){
-        printf("Congratulations! You got it!\n");
+        printf("\n--- Congratulations! You got it! ---\n");
     }
     else{
-        printf("Too bad, the word was %s!\n", word);
+        printf("\n--- Too bad, the word was %s! ---\n", word);
     }
 
 /*
 End
 */
-    // Close file descriptors and clean up memory
+    // Close file descriptor and clean up memory
     fclose(fin);
+    for (int i = 0; i < wordCount; i++) {
+        free(words[i]);
+    }
 
     return 0;
 }
@@ -122,4 +138,30 @@ int validateGuess(char* guess, int length){
         }
     }
     return 1;
+}
+
+char* checkGuess(char* guess, char* word, int wordLength){
+    char outputStr[wordLength];
+    int count = 0;
+    
+    //Check for absolute matches
+    for (int i = 0; i < wordLength; i++){
+        outputStr[i] = '_';
+        if (guess[i] == word[i]){
+            outputStr[i] = guess[i];
+        }
+    }
+    //Check for partial matches
+    for (int i = 0; i < wordLength; i++) {
+        if (outputStr[i] == '_') {
+            for (int j = 0; j < wordLength; j++) {
+                if (guess[i] == word[j] && outputStr[j] == '_') {
+                    outputStr[i] = '/'; // Indicate a partial match
+                    break; // Break out of the inner loop to avoid multiple partial matches
+                }
+            }
+        }
+    }
+
+    return strdup(outputStr);
 }

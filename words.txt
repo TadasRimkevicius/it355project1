@@ -1,5 +1,4 @@
 crow
-canine
 card
 phone
 petunia
@@ -11,4 +10,19 @@ vial
 vile
 marshal
 strip
-filament
+sworn
+score
+grind
+crisp
+pouch
+quirk
+jolt
+gawk
+myth
+burn
+plague
+wrench
+sprout
+steward
+harmony
+jumbled
