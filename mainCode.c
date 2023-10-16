@@ -17,6 +17,11 @@ int validateGuess();
 // which letters are correct or not and letters not in the right place.
 char* checkGuess();
 
+//SIG30-c
+void handler(int signum){
+    _exit -1;
+}
+
 int main(int argc, char *argv[]){
     char buffer[1024];
     char *words[100];
@@ -39,10 +44,11 @@ int main(int argc, char *argv[]){
     
 
     // Read in words from file and store them in words[] array
+    //FIO37-C
     while (fgets(buffer, sizeof(buffer), fin) != NULL){
-        size_t newlinePos = strcspn(buffer, "\n"); // Find the position of the newline character
-        if (newlinePos < strlen(buffer)) {
-            buffer[newlinePos] = '\0'; // Replace the newline character with a null terminator
+        char *p = strchr(buffer, '\n');
+        if (p) {
+            *p = '\0'; // Replace the newline character with a null terminator
             words[wordCount] = strdup(buffer); // Store the modified word in the words array
         } else {
             words[wordCount] = strdup(buffer);
@@ -90,6 +96,7 @@ Start
         printf("\n\n--- Congratulations! You got it! ---\n\n");
     }
     else{
+        //FIO47-C
         printf("\n\n--- Too bad, the word was %s! ---\n\n", word);
     }
 
@@ -97,6 +104,14 @@ Start
 End
 */
     // Close file descriptor and clean up memory
+    if(fseek(fin, 0L, SEEK_SET) != 0){
+        return -1;
+    }
+
+    //FIO39-C
+    if(fwrite("\nSuccessful\n", strlen("\nSuccessful\n"), 1, fin) != strlen("\nSuccessful\n")){
+        return -1;
+    } 
     fclose(fin);
     for (int i = 0; i < wordCount; i++) {
         free(words[i]);
@@ -116,6 +131,9 @@ char* getGuess(int wordLength){
             fprintf(stderr, "\n--- Input error ---\n\n");
             exit(-1);
         }
+        //FIO30-C
+        fputs(guess,stdout);
+        fputs("\n",stdout);
         length = strlen(guess);
         if (length != wordLength){
             printf("Wrong number of letters! The word is %d letters long!\n\n", wordLength);
@@ -146,6 +164,7 @@ char* checkGuess(char* guess, char* word, int wordLength){
     int count = 0;
     
     //Check for absolute matches
+    //FLP30-C
     for (int i = 0; i < wordLength; i++){
         outputStr[i] = '_';
         if (guess[i] == word[i]){
