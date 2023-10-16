@@ -17,7 +17,6 @@ int validateGuess();
 // which letters are correct or not and letters not in the right place.
 char* checkGuess();
 
-//SIG30-c
 void handler(int signum){
     _exit -1;
 }
@@ -44,7 +43,7 @@ int main(int argc, char *argv[]){
     
 
     // Read in words from file and store them in words[] array
-    //FIO37-C
+
     while (fgets(buffer, sizeof(buffer), fin) != NULL){
         char *p = strchr(buffer, '\n');
         if (p) {
@@ -96,7 +95,6 @@ Start
         printf("\n\n--- Congratulations! You got it! ---\n\n");
     }
     else{
-        //FIO47-C
         printf("\n\n--- Too bad, the word was %s! ---\n\n", word);
     }
 
@@ -108,7 +106,6 @@ End
         return -1;
     }
 
-    //FIO39-C
     if(fwrite("\nSuccessful\n", strlen("\nSuccessful\n"), 1, fin) != strlen("\nSuccessful\n")){
         return -1;
     } 
@@ -131,7 +128,6 @@ char* getGuess(int wordLength){
             fprintf(stderr, "\n--- Input error ---\n\n");
             exit(-1);
         }
-        //FIO30-C
         fputs(guess,stdout);
         fputs("\n",stdout);
         length = strlen(guess);
@@ -164,7 +160,6 @@ char* checkGuess(char* guess, char* word, int wordLength){
     int count = 0;
     
     //Check for absolute matches
-    //FLP30-C
     for (int i = 0; i < wordLength; i++){
         outputStr[i] = '_';
         if (guess[i] == word[i]){
