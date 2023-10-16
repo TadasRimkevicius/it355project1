@@ -177,7 +177,6 @@ char* checkGuess(char* guess, char* word, int wordLength){
             for (int j = 0; j < wordLength; j++) {
                 if (guess[i] == word[j] && outputStr[j] == '_') {
                     outputStr[i] = '/'; // Indicate a partial match
-                    break; // Break out of the inner loop to avoid multiple partial matches
                 }
             }
         }

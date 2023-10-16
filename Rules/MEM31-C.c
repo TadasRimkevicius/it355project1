@@ -6,5 +6,7 @@ int main(){
     numberPointer = (int *)malloc(sizeof(numberPointer));
     *numberPointer = 2023;
     printf("%d\n", *numberPointer);
+    // free numberPointer before terminating
     free(numberPointer);
 }
+
